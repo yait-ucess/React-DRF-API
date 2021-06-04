@@ -5,6 +5,9 @@ const DrfApiFetch = () => {
 
   const [tasks, setTasks] = useState([])
 
+  const [selectedTask, setSelectedTask] = useState([])
+  const [id, setId] = useState(1)
+
   useEffect(() => {
     axios.get('http://127.0.0.1:8000/api/tasks/',{
       headers: {
@@ -14,6 +17,15 @@ const DrfApiFetch = () => {
     .then(res => {setTasks(res.data)})
   },[])
 
+  const getTask = () => {
+    axios.get(`http://127.0.0.1:8000/api/tasks/${id}/`,{
+      headers: {
+        'Authorization': 'Token d5ea6cb5f62cec49f9bb7c0db38b2158fe089b65'
+      }})
+      .then(res => {setSelectedTask(res.data)
+    })
+  }
+
   return (
     <div>
       <ul>
@@ -21,6 +33,13 @@ const DrfApiFetch = () => {
           tasks.map(task => <li key={task.id}> {task.title} {task.id} </li>)
         }
       </ul>
+
+        Set id <br/>
+        <input type='text' value={id} onChange={evt => {setId(evt.target.value)}}/>
+        <br/>
+        <button type='button' onClick={() => getTask()}>Get task</button>
+        <h3>{selectedTask.title} {selectedTask.id}</h3>
+
     </div>
   )
 }
