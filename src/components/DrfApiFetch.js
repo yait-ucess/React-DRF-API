@@ -32,7 +32,13 @@ const DrfApiFetch = () => {
       headers: {
         'Authorization': 'Token d5ea6cb5f62cec49f9bb7c0db38b2158fe089b65'
       }})
-      .then(res => {setTasks(tasks.filter(task => task.id !== id)); setSelectedTask([])})
+      .then(res => {setTasks(tasks.filter(task => task.id !== id));
+      setSelectedTask([]);
+      if (editedTask.id === id) {
+        setEditedTask({ id: "", title: "" });
+      }
+    })
+
   }
 
   const createTask = (task) => {
