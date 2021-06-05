@@ -6,6 +6,7 @@ const DrfApiFetch = () => {
   const [tasks, setTasks] = useState([])
 
   const [selectedTask, setSelectedTask] = useState([])
+  const [editedTask, setEditedTask] = useState({id:'', title:''})
   const [id, setId] = useState(1)
 
   useEffect(() => {
@@ -34,6 +35,24 @@ const DrfApiFetch = () => {
       .then(res => {setTasks(tasks.filter(task => task.id !== id)); setSelectedTask([])})
   }
 
+  const createTask = (task) => {
+    const data = {
+      title: task.title
+    }
+    axios.post(`http://127.0.0.1:8000/api/tasks/`, data,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Token d5ea6cb5f62cec49f9bb7c0db38b2158fe089b65'
+      }})
+      .then(res => setTasks([...tasks, res.data])
+    )
+  }
+
+  const handleInputChange = () => evt => {
+    const value = evt.target.value;
+    const name = evt.target.name;
+    setEditedTask({...editedTask, [name]: value})
+  }
 
   return (
     <div>
@@ -49,11 +68,13 @@ const DrfApiFetch = () => {
       </ul>
 
         Set id <br/>
-        <input type='text' value={id} onChange={evt => {setId(evt.target.value)}}/>
+        <input type="text" value={id} onChange={evt => {setId(evt.target.value)}}/>
         <br/>
-        <button type='button' onClick={() => getTask()}>Get task</button>
-        {/* <button type='button' onClick={() => deleteTask()}>Delete task</button> */}
+        <button type="button" onClick={() => getTask()}>Get task</button>
+        {/* <button type="button" onClick={() => deleteTask()}>Delete task</button> */}
         <h3>{selectedTask.title} {selectedTask.id}</h3>
+        <input type="text" name="title" value={editedTask.title} onChange={handleInputChange()} placeholder="New task" required/>
+        <button onClick={()=> createTask(editedTask)}>Create</button>
 
     </div>
   )
